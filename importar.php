@@ -3,8 +3,8 @@
 	include_once('lib/adodb5/adodb.inc.php');
     error_reporting(E_ALL);
 	ini_set('display_errors', 1);
-    $nombre_archivo = $_GET['nomar'];
-	$folio          = $_GET['folio'];
+    $nombre_archivo = $argv[1];
+	$folio          = $argv[2];
     $mysqli = new mysqli(_database_host, _database_user, _database_password, _database_name);
 
 	if ($mysqli->connect_errno) {

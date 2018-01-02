@@ -6,11 +6,13 @@
 		$base = dirname(__FILE__).'/base/base1.xml';
     error_reporting(E_ALL);
 	ini_set('display_errors', 1);
+	set_time_limit(0);
 	$url ="https://timbrado.pade.mx/servicio/Timbrado3.3?wsdl";
 	$carpeta_empresa = '';
-	$rfc_empresa = $_GET['rfc'];
-	$folio_init  = $_GET['folioinit'];
-	$folio_fin   = $_GET['foliofin'];
+	$rfc_empresa = $argv[1];
+	$folio_init  = $argv[2];
+	$folio_fin   = $argv[3];
+	
 	if ( ! $cliente = new SoapClient($url, array('exceptions' => true))) {
             throw new Exception('Emisor Prodigia fallo al instanciarse');
      }
@@ -76,7 +78,7 @@
 		if($rowreceptor = $resreceptor->fetch_assoc()) {		
 			if($rowreceptor['total'] >0){
 				echo 'Marcado';
-				$sql  = "UPDATE recibos_nomina SET mensaje = 'NOM138', estatus = 3, updated_at = now() where Receptor = '{$rfc_receptor}'";	
+				$sql  = "UPDATE recibos_nomina SET mensaje = 'NOM138', estatus = 3, updated_at = now() where receptor_rfc = '{$rfc_receptor}'";	
 			 	$mysqli->query($sql);			 	
 			 	continue;
 			}
@@ -209,7 +211,6 @@
 
 		if($timbrado_ok === 'false'){
 			$mensaje=$servicio_timbrado->getElementsByTagName("codigo")->item(0)->nodeValue;
-
 			$sql  = "UPDATE recibos_nomina SET mensaje = '{$mensaje}', estatus = 3, updated_at = now() where id = {$row['id']}";	
 			 $mysqli->query($sql);
 
